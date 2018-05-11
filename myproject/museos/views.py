@@ -1,11 +1,47 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import Museo
+from django.db import IntegrityError
+
+from xml.sax import make_parser
+from urllib import request, error
+from xml.sax.handler import ContentHandler
+import museos.parser
+
+def print_museos():
+    museos = Museo.objects.all()
+    lista = 'Lista de museos:<ol>'
+    for museo in museos:
+        lista += '<li>' + museo.nombre + '</li>'
+    lista += '</ol>'
+    return lista
+
+def update_museos():
+    MuseoParser = make_parser()
+    MuseoHandler = museos.parser.CounterHandler()
+    MuseoParser.setContentHandler(MuseoHandler)
+
+    xmlFile = request.urlopen('https://datos.madrid.es/egob/catalogo/201132-0-museos.xml')
+    MuseoParser.parse(xmlFile)
+
+    for i in range(len(MuseoHandler.titles)):
+        museo = Museo(nombre=MuseoHandler.titles[i])
+        try:
+            museo.save()
+        except IntegrityError:
+            pass
+            #Museo.objects.filter(nombre=MuseoHandler.titles[i]).update(link=BarrapuntoHandler.links[i])
+
+    return print_museos()
 
 # Create your views here.
 def barra(request):
-    return HttpResponse('Barra')
+    prueba = print_museos()
+    prueba = update_museos()
+    return HttpResponse(prueba)
 
-def museos(request):
+#Nombre provisional
+def museo_todos(request):
     return HttpResponse('Museos')
 
 def museo_id(request, mid):
