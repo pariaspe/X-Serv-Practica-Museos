@@ -1,17 +1,17 @@
 from django.db import models
 
 # Create your models here.
-class Usuario(models.Model):
-    nombre = models.CharField()
-    contraseña = models.CharField()
-    pagina = models.CharField()
-    usuario_museo = models.ManyToManiField(Museo)
-    
+class Museo(models.Model):
+    nombre = models.CharField(max_length=64)
+
     def __str__(self):
         return self.nombre
 
-class Museo(models.Model):
-    nombre = models.CharField()
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=32)
+    contraseña = models.CharField(max_length=32)
+    pagina = models.CharField(max_length=64)
+    usuario_museo = models.ManyToManyField(Museo)
 
     def __str__(self):
         return self.nombre
