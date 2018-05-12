@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 class Museo(models.Model):
@@ -9,13 +12,22 @@ class Museo(models.Model):
         return self.nombre
 
 class Usuario(models.Model):
-    nombre = models.CharField(max_length=32)
-    contraseña = models.CharField(max_length=32)
-    pagina = models.CharField(max_length=64)
-    usuario_museo = models.ManyToManyField(Museo)
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    pagina = models.CharField(max_length=64, default='Pagina de usuario')
+    usuario_museo = models.ManyToManyField(Museo, blank=True)
 
     def __str__(self):
-        return self.nombre
+        return self.usuario.username
+
+# Visto en: https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Usuario.objects.create(usuario=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.usuario.save()
 
 class Comentario(models.Model):
     usuario = models.ForeignKey(Usuario)
