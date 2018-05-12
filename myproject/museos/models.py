@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Museo(models.Model):
+    n_id = models.IntegerField(unique=True)
     nombre = models.CharField(max_length=64)
 
     def __str__(self):
