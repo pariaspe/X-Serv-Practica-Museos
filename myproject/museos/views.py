@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Museo
+from .models import Museo, Usuario
+from django.contrib.auth.models import User
 from django.db import IntegrityError
 
 from django.template.loader import get_template
@@ -59,8 +60,16 @@ def museo_id(request, mid):
     except Museo.DoesNotExist:
         return HttpResponseNotFound('404 NOT FOUND')
 
-def usuario(request, name):
-    return HttpResponse('Usuario ' + name)
+def usuario(request, nombre):
+    try:
+        usuario = User.objects.get(username=nombre)
+        usuario = Usuario.objects.get(usuario=usuario)
+        template = get_template('annotated.html')
+        return HttpResponse(template.render(Context({'title': usuario.pagina,
+                                                    'content': 'Info. Por desarrolar...'})))
+    except Usuario.DoesNotExist:
+        return HttpResponseNotFound('404 NOT FOUND')
+
 
 def usuario_xml(request, name):
     return HttpResponse('Xml de ' + name)
