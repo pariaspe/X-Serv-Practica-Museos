@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from .models import Museo
 from django.db import IntegrityError
 
+from django.template.loader import get_template
+from django.template import Context
+
 from xml.sax import make_parser
 from urllib import request, error
 from xml.sax.handler import ContentHandler
@@ -36,9 +39,12 @@ def update_museos():
 
 # Create your views here.
 def barra(request):
+    title = '<h1>Mis Museos</h1>'
     prueba = print_museos()
-    prueba = update_museos()
-    return HttpResponse(prueba)
+    #prueba = update_museos()
+    template = get_template('annotated.html')
+    return HttpResponse(template.render(Context({'title': title,
+                                                 'content': prueba})))
 
 #Nombre provisional
 def museo_todos(request):
