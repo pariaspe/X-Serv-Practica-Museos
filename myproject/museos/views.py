@@ -25,7 +25,7 @@ def update_museos():
     MuseoParser.parse(xmlFile)
 
     for i in range(len(MuseoHandler.titles)):
-        museo = Museo(nombre=MuseoHandler.titles[i])
+        museo = Museo(n_id=MuseoHandler.ids[i], nombre=MuseoHandler.titles[i])
         try:
             museo.save()
         except IntegrityError:
