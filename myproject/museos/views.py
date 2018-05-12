@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from .models import Museo
 from django.db import IntegrityError
 
@@ -39,11 +39,10 @@ def update_museos():
 
 # Create your views here.
 def barra(request):
-    title = '<h1>Mis Museos</h1>'
     prueba = print_museos()
     #prueba = update_museos()
     template = get_template('annotated.html')
-    return HttpResponse(template.render(Context({'title': title,
+    return HttpResponse(template.render(Context({'title': 'Mis Museos',
                                                  'content': prueba})))
 
 #Nombre provisional
@@ -51,7 +50,14 @@ def museo_todos(request):
     return HttpResponse('Museos')
 
 def museo_id(request, mid):
-    return HttpResponse('Museo ' + mid)
+    try:
+        museo = Museo.objects.get(n_id=mid)
+        template = get_template('annotated.html')
+        return HttpResponse(template.render(Context({'title': museo.nombre,
+                                                     'content': 'Info. Por desarrolar...'})))
+
+    except Museo.DoesNotExist:
+        return HttpResponseNotFound('404 NOT FOUND')
 
 def usuario(request, name):
     return HttpResponse('Usuario ' + name)
