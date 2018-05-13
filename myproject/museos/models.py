@@ -7,6 +7,14 @@ from django.dispatch import receiver
 class Museo(models.Model):
     n_id = models.IntegerField(unique=True)
     nombre = models.CharField(max_length=64)
+    direccion = models.CharField(max_length=64)
+    descripcion = models.TextField(blank=True)
+    accesibilidad = models.BooleanField()
+    barrio = models.CharField(max_length=32)
+    distrito = models.CharField(max_length=32)
+    url = models.URLField()
+    telefono = models.CharField(max_length=32, blank=True)
+    email = models.EmailField(blank=True)
 
     def __str__(self):
         return self.nombre
