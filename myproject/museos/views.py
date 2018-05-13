@@ -21,6 +21,14 @@ def print_museos():
     lista += '</ol>'
     return lista
 
+def print_accesibles():
+    museos = Museo.objects.filter(accesibilidad=True)
+    lista = 'Lista de museos:<ol>'
+    for museo in museos:
+        lista += '<li><a href="museos/' + str(museo.n_id) + '">' + museo.nombre + '</a></li>'
+    lista += '</ol>'
+    return lista
+
 def update_museos():
     MuseoParser = make_parser()
     MuseoHandler = museos.parser.CounterHandler()
@@ -29,13 +37,17 @@ def update_museos():
     xmlFile = request.urlopen('https://datos.madrid.es/egob/catalogo/201132-0-museos.xml')
     MuseoParser.parse(xmlFile)
 
-    for i in range(len(MuseoHandler.titles)):
-        museo = Museo(n_id=MuseoHandler.ids[i], nombre=MuseoHandler.titles[i])
+    for i in range(len(MuseoHandler.nombres)):
+        accesibilidad = MuseoHandler.accesibilidad[i] == '1'
+        telefono, email = MuseoHandler.contactos[i]
+        museo = Museo(n_id=MuseoHandler.ids[i], nombre=MuseoHandler.nombres[i],
+            direccion=MuseoHandler.direcciones[i], descripcion=MuseoHandler.descripciones[i], accesibilidad=accesibilidad,
+            barrio=MuseoHandler.barrios[i], distrito=MuseoHandler.distritos[i], url=MuseoHandler.urls[i], telefono=telefono, email=email)
         try:
             museo.save()
         except IntegrityError:
             pass
-            #Museo.objects.filter(nombre=MuseoHandler.titles[i]).update(link=BarrapuntoHandler.links[i])
+            #Museo.objects.filter(nombre=MuseoHandler.titles[i]).update(link=BarrapuntoHandler.links[i]) # TODO
 
     return print_museos()
 
@@ -44,7 +56,7 @@ def print_usuarios():
     lista = 'Lista de usuarios:<ul>'
     for usuario in usuarios:
         try:
-            ñoño = Usuario.objects.get(usuario=usuario) # ñoño no es utilizado
+            ñoño = Usuario.objects.get(usuario=usuario) # TODO ñoño no es utilizado
             lista += '<li><a href="' + usuario.username + '">' + usuario.username + '</a></li>'
         except Usuario.DoesNotExist:
             pass
@@ -54,6 +66,7 @@ def print_usuarios():
 # Create your views here.
 @csrf_exempt
 def barra(request):
+    accesible = False                       # TODO Funciona mal
     setAccesible = False
     if request.method == 'POST':
         cookies = request.COOKIES
@@ -64,8 +77,11 @@ def barra(request):
             accesible = True
         setAccesible = True
 
-    museos = print_museos()
     #museos = update_museos()
+    if accesible:
+        museos = print_accesibles()
+    else:
+        museos = print_museos()
     usuarios = print_usuarios()
     template = get_template('annotated.html')
     response = HttpResponse(template.render(Context({'title': 'Mis Museos',
