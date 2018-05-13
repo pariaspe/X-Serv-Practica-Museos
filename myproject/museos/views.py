@@ -16,7 +16,7 @@ def print_museos():
     museos = Museo.objects.all()
     lista = 'Lista de museos:<ol>'
     for museo in museos:
-        lista += '<li>' + museo.nombre + '</li>'
+        lista += '<li><a href="museos/' + str(museo.n_id) + '">' + museo.nombre + '</a></li>'
     lista += '</ol>'
     return lista
 
@@ -38,13 +38,26 @@ def update_museos():
 
     return print_museos()
 
+def print_usuarios():
+    usuarios = User.objects.all()
+    lista = 'Lista de usuarios:<ul>'
+    for usuario in usuarios:
+        try:
+            ñoño = Usuario.objects.get(usuario=usuario)
+            lista += '<li><a href="' + usuario.username + '">' + usuario.username + '</a></li>'
+        except Usuario.DoesNotExist:
+            pass
+    lista += '</ul>'
+    return lista
+
 # Create your views here.
 def barra(request):
-    prueba = print_museos()
-    #prueba = update_museos()
+    museos = print_museos()
+    #museos = update_museos()
+    usuarios = print_usuarios()
     template = get_template('annotated.html')
     return HttpResponse(template.render(Context({'title': 'Mis Museos',
-                                                 'content': prueba})))
+                                                 'content': museos + usuarios})))
 
 #Nombre provisional
 def museo_todos(request):
