@@ -6,6 +6,7 @@ from django.db import IntegrityError
 
 from django.template.loader import get_template
 from django.template import Context
+from django.views.decorators.csrf import csrf_exempt
 
 from xml.sax import make_parser
 from urllib import request, error
@@ -43,7 +44,7 @@ def print_usuarios():
     lista = 'Lista de usuarios:<ul>'
     for usuario in usuarios:
         try:
-            ñoño = Usuario.objects.get(usuario=usuario)
+            ñoño = Usuario.objects.get(usuario=usuario) # ñoño no es utilizado
             lista += '<li><a href="' + usuario.username + '">' + usuario.username + '</a></li>'
         except Usuario.DoesNotExist:
             pass
@@ -51,13 +52,27 @@ def print_usuarios():
     return lista
 
 # Create your views here.
+@csrf_exempt
 def barra(request):
+    setAccesible = False
+    if request.method == 'POST':
+        cookies = request.COOKIES
+        try:
+            accesible = cookies['accesible'] == 'True'
+            accesible = not accesible
+        except KeyError:
+            accesible = True
+        setAccesible = True
+
     museos = print_museos()
     #museos = update_museos()
     usuarios = print_usuarios()
     template = get_template('annotated.html')
-    return HttpResponse(template.render(Context({'title': 'Mis Museos',
+    response = HttpResponse(template.render(Context({'title': 'Mis Museos',
                                                  'content': museos + usuarios})))
+    if setAccesible:
+        response.set_cookie('accesible', value=accesible)
+    return response
 
 #Nombre provisional
 def museo_todos(request):
