@@ -132,9 +132,20 @@ def museo_all(request):
                                                 'select': select_box(),
                                                 'content': museos})))
 
+@csrf_exempt
 def museo_id(request, mid):
     try:
         museo = Museo.objects.get(n_id=mid)
+
+        if request.method == 'POST':
+            username = None
+            if request.user.is_authenticated():
+                username = request.user.username
+
+            user = User.objects.get(username=username)
+            user = Usuario.objects.get(usuario=user)
+            user.usuario_museo.add(museo)
+
         info = museo.descripcion
         info += '<p><a href="' + museo.url + '">Más información</a></p>'
         info += '<b><u>Dirección:</u></b> ' + museo.direccion + '<br/>'
@@ -145,7 +156,7 @@ def museo_id(request, mid):
         info += '<li><b><u>Teléfono:</u></b> ' + museo.telefono + '</li>'
         info += '<li><b><u>Email:</u></b> ' + museo.email + '</li></ul>'
 
-        template = get_template('annotated.html')
+        template = get_template('museo-id.html')
         return HttpResponse(template.render(Context({'title': museo.nombre,
                                                      'content': info})))
 
