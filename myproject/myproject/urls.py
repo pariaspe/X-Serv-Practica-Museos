@@ -8,7 +8,7 @@ urlpatterns = [
 
     url(r'^$', 'museos.views.barra'),
     url(r'^about$', 'museos.views.about'),
-    url(r'^museos$', 'museos.views.museo_todos'),
+    url(r'^museos$', 'museos.views.museo_all'),
     url(r'^museos/(\d+)$', 'museos.views.museo_id'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^([^/]*)/xml$', 'museos.views.usuario_xml'),
