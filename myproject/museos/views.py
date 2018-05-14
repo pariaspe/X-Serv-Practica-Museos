@@ -13,16 +13,22 @@ from urllib import request, error
 from xml.sax.handler import ContentHandler
 import museos.parser
 
-def print_museos():
-    museos = Museo.objects.all()
+def print_museos(distrito):
+    if distrito == '':
+        museos = Museo.objects.all()
+    else:
+        museos = Museo.objects.filter(distrito=distrito)
     lista = 'Lista de museos:<ol>'
     for museo in museos:
         lista += '<li><a href="museos/' + str(museo.n_id) + '">' + museo.nombre + '</a></li>'
     lista += '</ol>'
     return lista
 
-def print_accesibles():
-    museos = Museo.objects.filter(accesibilidad=True)
+def print_accesibles(distrito):
+    if distrito == '':
+        museos = Museo.objects.filter(accesibilidad=True)
+    else:
+        museos = Museo.objects.filter(accesibilidad=True).filter(distrito=distrito)
     lista = 'Lista de museos:<ol>'
     for museo in museos:
         lista += '<li><a href="museos/' + str(museo.n_id) + '">' + museo.nombre + '</a></li>'
@@ -63,6 +69,15 @@ def print_usuarios():
     lista += '</ul>'
     return lista
 
+def select_box():
+    distritos = Museo.objects.all().values_list('distrito', flat=True).distinct()
+    select = '<select name="distrito">'
+    select += '<option value="">------</option>'
+    for distrito in distritos:
+        select += '<option value="' + distrito + '">' + distrito + '</option>'
+    select += '</select>'
+    return select
+
 # Create your views here.
 @csrf_exempt
 def barra(request):
@@ -84,9 +99,9 @@ def barra(request):
 
     #museos = update_museos()
     if accesible:
-        museos = print_accesibles()
+        museos = print_accesibles('')
     else:
-        museos = print_museos()
+        museos = print_museos('')
     usuarios = print_usuarios()
     template = get_template('annotated.html')
     response = HttpResponse(template.render(Context({'title': 'Mis Museos',
@@ -96,8 +111,26 @@ def barra(request):
     return response
 
 #Nombre provisional
-def museo_todos(request):
-    return HttpResponse('Museos')
+def museo_all(request):
+    if request.method == 'GET':
+        cookies = request.COOKIES
+        try:
+            accesible = cookies['accesible'] == 'True'
+        except KeyError:
+            accesible = False
+        distrito = request.GET.get('distrito', '')
+
+    if accesible:
+        museos = print_accesibles(distrito)
+    else:
+        museos = print_museos(distrito)
+
+
+
+    template = get_template('museos.html')
+    return HttpResponse(template.render(Context({'title': 'Lista de museos',
+                                                'select': select_box(),
+                                                'content': museos})))
 
 def museo_id(request, mid):
     try:
