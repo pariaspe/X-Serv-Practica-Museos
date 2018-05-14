@@ -163,14 +163,39 @@ def museo_id(request, mid):
     except Museo.DoesNotExist:
         return HttpResponseNotFound('404 NOT FOUND')
 
+@csrf_exempt
 def usuario(request, nombre):
     try:
         usuario = User.objects.get(username=nombre)
+
+        if request.method == 'POST':
+            pagina = request.POST.get('pagina', None)
+            Usuario.objects.filter(usuario=usuario).update(pagina=pagina)
+
         usuario = Usuario.objects.get(usuario=usuario)
-        template = get_template('annotated.html')
+
+        n = 0
+        if request.method == 'GET':
+            n = request.GET.get('show', '0')
+            n = int(n)*5
+
+        museos = usuario.usuario_museo.all()
+        museos_sliced = museos[n:n+5]
+        info = '<b><u>Museos añadidos:</u></b><ul>'
+        for museo in museos_sliced:
+            info += '<li>' + museo.nombre + '<br/>' + museo.direccion + '<br/>'
+            info += '<a href="museos/' + str(museo.n_id) + '">Más información</a><br/><br/>'
+        info += '</ul>'
+
+        if n != 0:
+            info += '<a href="' + nombre + '?show=' + str(int(n/5)-1) + '">Preview</a>'
+        if n+5 < len(museos):
+            info += ' <a href="' + nombre + '?show=' + str(int(n/5)+1) + '">Next</a>'
+
+        template = get_template('usuario.html')
         return HttpResponse(template.render(Context({'title': usuario.pagina,
-                                                    'content': 'Info. Por desarrolar...'})))
-    except Usuario.DoesNotExist:
+                                                    'content': info})))
+    except (User.DoesNotExist, Usuario.DoesNotExist) as e:
         return HttpResponseNotFound('404 NOT FOUND')
 
 
