@@ -66,7 +66,6 @@ def print_usuarios():
 # Create your views here.
 @csrf_exempt
 def barra(request):
-    accesible = False                       # TODO Funciona mal
     setAccesible = False
     if request.method == 'POST':
         cookies = request.COOKIES
@@ -76,6 +75,12 @@ def barra(request):
         except KeyError:
             accesible = True
         setAccesible = True
+    if request.method == 'GET':
+        cookies = request.COOKIES
+        try:
+            accesible = cookies['accesible'] == 'True'
+        except KeyError:
+            accesible = False
 
     #museos = update_museos()
     if accesible:
@@ -97,9 +102,19 @@ def museo_todos(request):
 def museo_id(request, mid):
     try:
         museo = Museo.objects.get(n_id=mid)
+        info = museo.descripcion
+        info += '<p><a href="' + museo.url + '">Más información</a></p>'
+        info += '<b><u>Dirección:</u></b> ' + museo.direccion + '<br/>'
+        info += '<b><u>Accesible:</u></b> ' + str(museo.accesibilidad) + '<br/>'
+        info += '<b><u>Barrio:</u></b> ' + museo.barrio + '<br/>'
+        info += '<b><u>Distrito:</u></b> ' + museo.distrito + '<br/>'
+        info += '<b><u>Contacto:</u></b><ul>'
+        info += '<li><b><u>Teléfono:</u></b> ' + museo.telefono + '</li>'
+        info += '<li><b><u>Email:</u></b> ' + museo.email + '</li></ul>'
+
         template = get_template('annotated.html')
         return HttpResponse(template.render(Context({'title': museo.nombre,
-                                                     'content': 'Info. Por desarrolar...'})))
+                                                     'content': info})))
 
     except Museo.DoesNotExist:
         return HttpResponseNotFound('404 NOT FOUND')
