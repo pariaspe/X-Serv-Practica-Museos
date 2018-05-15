@@ -56,7 +56,7 @@ def update_museos():
             pass
             #Museo.objects.filter(nombre=MuseoHandler.titles[i]).update(link=BarrapuntoHandler.links[i]) # TODO
 
-    return print_museos()
+    return print_museos('')
 
 def print_usuarios():
     usuarios = User.objects.all()
@@ -107,10 +107,13 @@ def barra(request):
         cookies = request.COOKIES
         try:
             accesible = cookies['accesible'] == 'True'
-            accesible = not accesible
+            if request.POST.get('upload'):
+                update_museos()
+            else:
+                accesible = not accesible
+                setAccesible = True
         except KeyError:
             accesible = True
-        setAccesible = True
     if request.method == 'GET':
         cookies = request.COOKIES
         try:
@@ -118,7 +121,6 @@ def barra(request):
         except KeyError:
             accesible = False
 
-    #museos = update_museos()
     if accesible:
         museos = print_accesibles('')
     else:
@@ -144,8 +146,6 @@ def museo_all(request):
         museos = print_accesibles(distrito)
     else:
         museos = print_museos(distrito)
-
-
 
     template = get_template('museos.html')
     return HttpResponse(template.render(Context({'title': 'Lista de museos',
