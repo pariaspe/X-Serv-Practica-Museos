@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Museo, Usuario
+from .models import Museo, Usuario, Comentario
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
@@ -12,6 +12,7 @@ from xml.sax import make_parser
 from urllib import request, error
 from xml.sax.handler import ContentHandler
 import museos.parser
+import datetime
 
 def print_museos(distrito):
     if distrito == '':
@@ -78,6 +79,26 @@ def select_box():
     select += '</select>'
     return select
 
+def print_comentarios(mid):
+    comentarios = Comentario.objects.filter(m_id=mid)
+    info = '<b><u>Comentario:</u></b><br/>'
+    for comentario in comentarios:
+        info += comentario.username + ': ' + comentario.comentario + ' at ' + str(comentario.fecha) + '<br/>'
+
+    return info
+
+def print_museo_info(museo):
+    info = museo.descripcion
+    info += '<p><a href="' + museo.url + '">Más información</a></p>'
+    info += '<b><u>Dirección:</u></b> ' + museo.direccion + '<br/>'
+    info += '<b><u>Accesible:</u></b> ' + str(museo.accesibilidad) + '<br/>'
+    info += '<b><u>Barrio:</u></b> ' + museo.barrio + '<br/>'
+    info += '<b><u>Distrito:</u></b> ' + museo.distrito + '<br/>'
+    info += '<b><u>Contacto:</u></b><ul>'
+    info += '<li><b><u>Teléfono:</u></b> ' + museo.telefono + '</li>'
+    info += '<li><b><u>Email:</u></b> ' + museo.email + '</li></ul>'
+    return info
+
 # Create your views here.
 @csrf_exempt
 def barra(request):
@@ -110,7 +131,6 @@ def barra(request):
         response.set_cookie('accesible', value=accesible)
     return response
 
-#Nombre provisional
 def museo_all(request):
     if request.method == 'GET':
         cookies = request.COOKIES
@@ -136,29 +156,31 @@ def museo_all(request):
 def museo_id(request, mid):
     try:
         museo = Museo.objects.get(n_id=mid)
+        nota = ''
 
         if request.method == 'POST':
             username = None
             if request.user.is_authenticated():
                 username = request.user.username
 
-            user = User.objects.get(username=username)
-            user = Usuario.objects.get(usuario=user)
-            user.usuario_museo.add(museo)
+            comentario = request.POST.get('comentario')
+            if comentario == None:
+                user = User.objects.get(username=username)
+                user = Usuario.objects.get(usuario=user)
+                user.usuario_museo.add(museo)
+            elif comentario != '':
+                comentario = Comentario(username=username, m_id=mid, comentario=comentario)
+                comentario.save()
+            else:
+                nota = 'No se pueden enviar comentarios vacios.<br/><br/>'
 
-        info = museo.descripcion
-        info += '<p><a href="' + museo.url + '">Más información</a></p>'
-        info += '<b><u>Dirección:</u></b> ' + museo.direccion + '<br/>'
-        info += '<b><u>Accesible:</u></b> ' + str(museo.accesibilidad) + '<br/>'
-        info += '<b><u>Barrio:</u></b> ' + museo.barrio + '<br/>'
-        info += '<b><u>Distrito:</u></b> ' + museo.distrito + '<br/>'
-        info += '<b><u>Contacto:</u></b><ul>'
-        info += '<li><b><u>Teléfono:</u></b> ' + museo.telefono + '</li>'
-        info += '<li><b><u>Email:</u></b> ' + museo.email + '</li></ul>'
+        info = print_museo_info(museo)
+        comentarios = nota + print_comentarios(mid)
 
         template = get_template('museo-id.html')
         return HttpResponse(template.render(Context({'title': museo.nombre,
-                                                     'content': info})))
+                                                     'content': info,
+                                                     'comentarios': comentarios})))
 
     except Museo.DoesNotExist:
         return HttpResponseNotFound('404 NOT FOUND')
