@@ -153,6 +153,9 @@ def barra(request):
         comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:5]
         museos = print_most(comentarios)
 
+    u = User.objects.get(username=request.user.username)
+    print(u.usuario.pagina)
+
     usuarios = print_usuarios()
     template = get_template('annotated.html')
     response = HttpResponse(template.render(Context({'title': 'Mis Museos',
@@ -193,11 +196,10 @@ def museo_id(request, mid):
 
             comentario = request.POST.get('comentario')
             user = User.objects.get(username=username)
-            user = Usuario.objects.get(usuario=user)
             if comentario == None:
-                user.usuario_museo.add(museo)
+                user.usuario.usuario_museo.add(museo)
             elif comentario != '':
-                comentario = Comentario(usuario=user, museo=museo, comentario=comentario)
+                comentario = Comentario(usuario=user.usuario, museo=museo, comentario=comentario)
                 comentario.save()
             else:
                 nota = 'No se pueden enviar comentarios vacios.<br/><br/>'
@@ -217,19 +219,16 @@ def museo_id(request, mid):
 def usuario(request, nombre):
     try:
         usuario = User.objects.get(username=nombre)
-
         if request.method == 'POST':
             pagina = request.POST.get('pagina', None)
             Usuario.objects.filter(usuario=usuario).update(pagina=pagina)
-
-        usuario = Usuario.objects.get(usuario=usuario)
 
         n = 0
         if request.method == 'GET':
             n = request.GET.get('show', '0')
             n = int(n)*5
 
-        museos = usuario.usuario_museo.all()
+        museos = usuario.usuario.usuario_museo.all()
         museos_sliced = museos[n:n+5]
         info = '<b><u>Museos añadidos:</u></b><ul>'
         for museo in museos_sliced:
@@ -243,7 +242,7 @@ def usuario(request, nombre):
             info += ' <a href="' + nombre + '?show=' + str(int(n/5)+1) + '">Next</a>'
 
         template = get_template('usuario.html')
-        return HttpResponse(template.render(Context({'title': usuario.pagina,
+        return HttpResponse(template.render(Context({'title': usuario.usuario.pagina,
                                                     'content': info})))
     except (User.DoesNotExist, Usuario.DoesNotExist) as e:
         return HttpResponseNotFound('404 NOT FOUND')
