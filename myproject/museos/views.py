@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Museo, Usuario, Comentario
+from .models import Museo, Usuario, Comentario, MuseoLike
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.db.models import Count
@@ -153,9 +153,6 @@ def barra(request):
         comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:5]
         museos = print_most(comentarios)
 
-    u = User.objects.get(username=request.user.username)
-    print(u.usuario.pagina)
-
     usuarios = print_usuarios()
     template = get_template('annotated.html')
     response = HttpResponse(template.render(Context({'title': 'Mis Museos',
@@ -197,7 +194,8 @@ def museo_id(request, mid):
             comentario = request.POST.get('comentario')
             user = User.objects.get(username=username)
             if comentario == None:
-                user.usuario.usuario_museo.add(museo)
+                like = MuseoLike(museo=museo, usuario=user.usuario)
+                like.save()
             elif comentario != '':
                 comentario = Comentario(usuario=user.usuario, museo=museo, comentario=comentario)
                 comentario.save()
@@ -228,7 +226,7 @@ def usuario(request, nombre):
             n = request.GET.get('show', '0')
             n = int(n)*5
 
-        museos = usuario.usuario.usuario_museo.all()
+        museos = usuario.usuario.likes.all()
         museos_sliced = museos[n:n+5]
         info = '<b><u>Museos añadidos:</u></b><ul>'
         for museo in museos_sliced:
