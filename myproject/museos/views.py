@@ -123,6 +123,25 @@ def print_museo_info(museo):
     info += '<li><b><u>Email:</u></b> ' + museo.email + '</li></ul>'
     return info
 
+def print_museos_likes(likes, n):
+    print(likes)
+    likes_sliced = likes[n:n+5]
+    info = '<b><u>Museos añadidos:</u></b><ul>'
+    for like in likes_sliced:
+        museo = like.museo
+        fecha = like.fecha
+        info += '<li>' + museo.nombre + '<br/>' + museo.direccion + '<br/>'
+        info += '<a href="museos/' + str(museo.n_id) + '">Más información</a><br/>'
+        info += 'Añadido el: ' + str(fecha) + '</br></br>'
+    info += '</ul>'
+
+    if n != 0:
+        info += '<a href="' + nombre + '?show=' + str(int(n/5)-1) + '">Preview</a>'
+    if n+5 < len(likes):
+        info += ' <a href="' + nombre + '?show=' + str(int(n/5)+1) + '">Next</a>'
+
+    return info
+
 # Create your views here.
 @csrf_exempt
 def barra(request):
@@ -217,31 +236,25 @@ def museo_id(request, mid):
 def usuario(request, nombre):
     try:
         usuario = User.objects.get(username=nombre)
+        nota = ''
         if request.method == 'POST':
             pagina = request.POST.get('pagina', None)
-            Usuario.objects.filter(usuario=usuario).update(pagina=pagina)
+            if pagina != '':
+                Usuario.objects.filter(usuario=usuario).update(pagina=pagina)
+            else:
+                nota = 'El titulo de la pagina no puede estar vacío.</br></br>'
 
         n = 0
         if request.method == 'GET':
             n = request.GET.get('show', '0')
             n = int(n)*5
 
-        museos = usuario.usuario.likes.all()
-        museos_sliced = museos[n:n+5]
-        info = '<b><u>Museos añadidos:</u></b><ul>'
-        for museo in museos_sliced:
-            info += '<li>' + museo.nombre + '<br/>' + museo.direccion + '<br/>'
-            info += '<a href="museos/' + str(museo.n_id) + '">Más información</a><br/><br/>'
-        info += '</ul>'
-
-        if n != 0:
-            info += '<a href="' + nombre + '?show=' + str(int(n/5)-1) + '">Preview</a>'
-        if n+5 < len(museos):
-            info += ' <a href="' + nombre + '?show=' + str(int(n/5)+1) + '">Next</a>'
+        likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
+        info = print_museos_likes(likes, n)
 
         template = get_template('usuario.html')
         return HttpResponse(template.render(Context({'title': usuario.usuario.pagina,
-                                                    'content': info})))
+                                                    'content': nota + info})))
     except (User.DoesNotExist, Usuario.DoesNotExist) as e:
         return HttpResponseNotFound('404 NOT FOUND')
 
