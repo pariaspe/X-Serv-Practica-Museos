@@ -38,10 +38,10 @@ def save_user_profile(sender, instance, **kwargs):
     instance.usuario.save()
 
 class Comentario(models.Model):
-    username = models.CharField(max_length=32)
-    m_id = models.IntegerField()
+    usuario = models.ForeignKey(Usuario)
+    museo = models.ForeignKey(Museo)
     comentario = models.TextField()
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.nomre + " " + self.fecha
+        return str(self.museo) + " " + str(self.fecha)
