@@ -22,7 +22,7 @@ class Museo(models.Model):
 class Usuario(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     pagina = models.CharField(max_length=64, default='Pagina de usuario')
-    usuario_museo = models.ManyToManyField(Museo, blank=True)
+    likes = models.ManyToManyField(Museo, through='MuseoLike', blank=True)
 
     def __str__(self):
         return self.usuario.username
@@ -36,6 +36,11 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.usuario.save()
+
+class MuseoLike(models.Model):
+    museo = models.ForeignKey(Museo, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    fecha = models.DateTimeField(auto_now_add=True)
 
 class Comentario(models.Model):
     usuario = models.ForeignKey(Usuario)
