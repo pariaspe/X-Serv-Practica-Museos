@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from .models import Museo, Usuario, Comentario
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-
+from django.db.models import Count
 from django.template.loader import get_template
 from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
@@ -12,7 +12,6 @@ from xml.sax import make_parser
 from urllib import request, error
 from xml.sax.handler import ContentHandler
 import museos.parser
-import datetime
 
 def print_museos(distrito):
     if distrito == '':
@@ -33,6 +32,31 @@ def print_accesibles(distrito):
     lista = 'Lista de museos:<ol>'
     for museo in museos:
         lista += '<li><a href="museos/' + str(museo.n_id) + '">' + museo.nombre + '</a></li>'
+    lista += '</ol>'
+    return lista
+
+def print_most_accesibles(items):
+    cont = 0
+    lista = 'Lista de museos más comentados:<ol>'
+    for item in items:
+        museo = Museo.objects.get(id=item[0])
+        if museo.accesibilidad:
+            lista += '<li>' + museo.nombre + '<br/>' + museo.direccion + '<br/>'
+            lista += '<a href="museos/' + str(museo.n_id) + '">Más información</a><br/><br/>'
+            cont += 1
+            print(cont)
+            if cont == 5:
+                break
+    lista += '</ol>'
+    return lista
+
+def print_most(items):
+    cont = 0
+    lista = 'Lista de museos más comentados:<ol>'
+    for item in items:
+        museo = Museo.objects.get(id=item[0])
+        lista += '<li>' + museo.nombre + '<br/>' + museo.direccion + '<br/>'
+        lista += '<a href="museos/' + str(museo.n_id) + '">Más información</a><br/><br/>'
     lista += '</ol>'
     return lista
 
@@ -79,11 +103,11 @@ def select_box():
     select += '</select>'
     return select
 
-def print_comentarios(mid):
-    comentarios = Comentario.objects.filter(m_id=mid)
+def print_comentarios(museo):
+    comentarios = Comentario.objects.filter(museo=museo)
     info = '<b><u>Comentario:</u></b><br/>'
     for comentario in comentarios:
-        info += comentario.username + ': ' + comentario.comentario + ' at ' + str(comentario.fecha) + '<br/>'
+        info += str(comentario.usuario) + ': ' + comentario.comentario + ' at ' + str(comentario.fecha) + '<br/>'
 
     return info
 
@@ -122,9 +146,13 @@ def barra(request):
             accesible = False
 
     if accesible:
-        museos = print_accesibles('')
+        comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:10]
+        museos = print_most_accesibles(comentarios)
+
     else:
-        museos = print_museos('')
+        comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:5]
+        museos = print_most(comentarios)
+
     usuarios = print_usuarios()
     template = get_template('annotated.html')
     response = HttpResponse(template.render(Context({'title': 'Mis Museos',
@@ -164,18 +192,18 @@ def museo_id(request, mid):
                 username = request.user.username
 
             comentario = request.POST.get('comentario')
+            user = User.objects.get(username=username)
+            user = Usuario.objects.get(usuario=user)
             if comentario == None:
-                user = User.objects.get(username=username)
-                user = Usuario.objects.get(usuario=user)
                 user.usuario_museo.add(museo)
             elif comentario != '':
-                comentario = Comentario(username=username, m_id=mid, comentario=comentario)
+                comentario = Comentario(usuario=user, museo=museo, comentario=comentario)
                 comentario.save()
             else:
                 nota = 'No se pueden enviar comentarios vacios.<br/><br/>'
 
         info = print_museo_info(museo)
-        comentarios = nota + print_comentarios(mid)
+        comentarios = nota + print_comentarios(museo)
 
         template = get_template('museo-id.html')
         return HttpResponse(template.render(Context({'title': museo.nombre,
