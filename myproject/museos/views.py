@@ -123,8 +123,7 @@ def print_museo_info(museo):
     info += '<li><b><u>Email:</u></b> ' + museo.email + '</li></ul>'
     return info
 
-def print_museos_likes(likes, n):
-    print(likes)
+def print_museos_likes(nombre, likes, n):
     likes_sliced = likes[n:n+5]
     info = '<b><u>Museos añadidos:</u></b><ul>'
     for like in likes_sliced:
@@ -204,12 +203,10 @@ def museo_id(request, mid):
     try:
         museo = Museo.objects.get(n_id=mid)
         nota = ''
+        username = None
 
-        if request.method == 'POST':
-            username = None
-            if request.user.is_authenticated():
-                username = request.user.username
-
+        if request.method == 'POST' and request.user.is_authenticated():
+            username = request.user.username
             comentario = request.POST.get('comentario')
             user = User.objects.get(username=username)
             if comentario == None:
@@ -224,7 +221,10 @@ def museo_id(request, mid):
         info = print_museo_info(museo)
         comentarios = nota + print_comentarios(museo)
 
-        template = get_template('museo-id.html')
+        if request.user.is_authenticated():
+            template = get_template('museo-id-private.html')
+        else:
+            template = get_template('museo-id.html')
         return HttpResponse(template.render(Context({'title': museo.nombre,
                                                      'content': info,
                                                      'comentarios': comentarios})))
@@ -237,7 +237,7 @@ def usuario(request, nombre):
     try:
         usuario = User.objects.get(username=nombre)
         nota = ''
-        if request.method == 'POST':
+        if request.method == 'POST' and nombre == request.user.username:
             pagina = request.POST.get('pagina', None)
             if pagina != '':
                 Usuario.objects.filter(usuario=usuario).update(pagina=pagina)
@@ -250,9 +250,12 @@ def usuario(request, nombre):
             n = int(n)*5
 
         likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
-        info = print_museos_likes(likes, n)
+        info = print_museos_likes(nombre, likes, n)
 
-        template = get_template('usuario.html')
+        if nombre == request.user.username:
+            template = get_template('usuario-private.html')
+        else:
+            template = get_template('usuario.html')
         return HttpResponse(template.render(Context({'title': usuario.usuario.pagina,
                                                     'content': nota + info})))
     except (User.DoesNotExist, Usuario.DoesNotExist) as e:
