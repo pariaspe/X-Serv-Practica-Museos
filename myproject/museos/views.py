@@ -255,10 +255,18 @@ def usuario(request, nombre):
         nota = ''
         if request.method == 'POST' and nombre == request.user.username:
             pagina = request.POST.get('pagina', None)
-            if pagina != '':
+            tam = request.POST.get('tam', None)
+            color = request.POST.get('color', None)
+            if pagina != '' and pagina != None:
                 Usuario.objects.filter(usuario=usuario).update(pagina=pagina)
+            elif tam != '' and tam != None:
+                Usuario.objects.filter(usuario=usuario).update(tam_letra_css=tam)
+                if color != '' and color != None:
+                    Usuario.objects.filter(usuario=usuario).update(color_fondo_css=color)
+            elif color != '' and color != None:
+                    Usuario.objects.filter(usuario=usuario).update(color_fondo_css=color)
             else:
-                nota = 'El titulo de la pagina no puede estar vacío.</br></br>'
+                nota = 'Los campos para cambiar la configuracion no puede estar vacío.</br></br>'
 
         n = 0
         if request.method == 'GET':
@@ -298,3 +306,15 @@ def login_user(request):
     else:
         login(request, user)
         return HttpResponseRedirect('/')
+
+def style(request):
+    try:
+        user = User.objects.get(username=request.user.username)
+        tam = user.usuario.tam_letra_css
+        color = user.usuario.color_fondo_css
+    except User.DoesNotExist:
+        tam = 11 # Valor por defecto
+        color = 'rgb(242, 245, 254)' # Valor por defecto
+    style = get_template('museos/style.css')
+    style = style.render(Context({'tam': tam, 'color': color}))
+    return HttpResponse(style, content_type='text/css')
