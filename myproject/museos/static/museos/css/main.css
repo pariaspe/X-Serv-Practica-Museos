@@ -87,15 +87,17 @@ code, kbd, samp {font-family:monospace; font-size:110%;}
     #header #logo a {color:#FFF;}
     #header #logo a:hover {color:#B5C4E3; text-decoration:underline;}
 
-    /* Header - Search */
-    #header #search {position:absolute; top:35px; right:20px;}
-    #header #search form {position:relative;}
-    #header #search #search-input-out {position:absolute; top:0; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
-    #header #search #search-input {width:140px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
-    #header #search #search-submit {position:absolute; top:0; right:0px;}
-    #header #search fieldset {margin:0; padding:0; border:0;}
-    #header #search fieldset {width:200px;}
-    #header #search legend {display:none;}
+    /* Header - Login */
+    #header #login {position:absolute; top:35px; right:20px;}
+    #header #login form {position:relative;}
+    #header #login #username-input-out {position:absolute; top:0; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #username-input {width:140px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #password-input-out {position:absolute; top:10; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #password-input {width:140px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #submit {position:absolute; top:0; right:0px;}
+    #header #login fieldset {margin:0; padding:0; border:0;}
+    #header #login fieldset {width:200px;}
+    #header #login legend {display:none;}
 
 /* Main menu (tabs) */
 #tabs {background:#192666; margin:0 5px; padding:10px 0 0 0; _height:1px;}
