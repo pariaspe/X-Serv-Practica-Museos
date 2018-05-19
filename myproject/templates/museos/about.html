@@ -20,8 +20,19 @@
 
 {% block content %}
 <!-- Content -->
+    <div id="titulo">
+      <h1>Sobre mí</h1>
+      <p>Práctica realizada por <b>Pedro Arias Pérez</b> (Doble Grado en Ingeniería en Tecnologías de Telecomunicación e Ingeniería Aeroespacial en Aeronavegacion).</p>
+    </div>
+
     <div id="content">
-      {{ content | safe }}
+      <h3>Funcionamiento básico</h3>
+      <p><u>Inicio:</u> se muestran los museos más comentados. Se muestran el nombre del museo, su dirección y una pequeña descripcion. Se añade un enlace para obtener maás información acerca del museo.</p>
+      <p>Además en la página principal encontramos el botón <i>Accesible</i>, que nos permite filtrar en toda la pagina a los museos accesibles.</p>
+      <p><u>Museo:</u> se muestran todos los detalles sobre el museo. Si estar registrado podrás comentar y/o añadir el museo a tus museos.</p>
+      <p><u>Usuario:</u> se muestran los museos seleccionados por ese usuario. Si además eres el dueño de la pagina, podras cambiarle el titulo y el estilo de visualización.</p>
+      <p><u>Museos:</u> se muestra un listado con todos los museos disponiples. Además, dispone de la opcion de filtar por distrito.</p>
+      <p><u>Xml:</u> se muestra un fichero xml con los museos seleccionados por un usuario.</p>
     </div>
 {% endblock %}
 
