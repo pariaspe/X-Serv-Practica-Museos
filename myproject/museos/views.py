@@ -8,6 +8,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
+import datetime
 
 from xml.sax import make_parser
 from urllib import request, error
@@ -292,9 +293,39 @@ def usuario(request, nombre):
     except (User.DoesNotExist, Usuario.DoesNotExist) as e:
         return HttpResponseNotFound('404 NOT FOUND')
 
+def parse_direccion(direccion):
+    slices = direccion.split('(')
+    via = slices[0]
+    slices = slices[1].split(')')
+    clase = slices[0]
+    slices = slices[1].split()
+    num = slices[1]
+    localidad = slices[2]
+    cp = slices[3]
+    return via, clase, num, localidad, cp
+
+def get_museos_xml(likes):
+    museos = ''
+    template = get_template('museo.xml')
+    for like in likes:
+        museo = like.museo
+        fecha = like.fecha
+        accesibilidad = '1' if museo.accesibilidad else '0'
+        via, clase, num, localidad, cp = parse_direccion(museo.direccion)
+        context = Context({'id': museo.n_id, 'nombre': museo.nombre, 'descripcion': museo.descripcion,
+                            'accesibilidad': accesibilidad, 'url': museo.url, 'via': via,
+                            'clase': clase, 'num': num, 'localidad': localidad, 'cp': cp, 'barrio': museo.barrio,
+                            'distrito': museo.distrito, 'tlf': museo.telefono, 'email': museo.email})
+        museos += template.render(context)
+    return museos
 
 def usuario_xml(request, name):
-    return HttpResponse('Xml de ' + name)
+    template = get_template('prueba.xml')
+    usuario = User.objects.get(username=name)
+    likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
+    content = get_museos_xml(likes)
+    context = Context({'usuario': name, 'fecha': datetime.datetime.now(), 'creador': request.user.username, 'content': content})
+    return HttpResponse(template.render(context), content_type='text/xml')
 
 def about(request):
     template = get_template('museos/about.html')
