@@ -1,0 +1,134 @@
+{% extends "museos/base.html" %}
+
+{% block tabs %}
+
+    <li id="active"><a href="/">Inicio<span class="tab-l"></span><span class="tab-r"></span></a></li> <!-- Active -->
+    <li><a href="museos">Museos<span class="tab-l"></span><span class="tab-r"></span></a></li>
+    <li><a href="#">Usuarios<span class="tab-l"></span><span class="tab-r"></span></a></li>
+    <li><a href="about">Sobre Mi<span class="tab-l"></span><span class="tab-r"></span></a></li>
+    <li><a href="#">Portfolio<span class="tab-l"></span><span class="tab-r"></span></a></li>
+    <li><a href="#">Contact<span class="tab-l"></span><span class="tab-r"></span></a></li>
+    <li><a href="#">Links<span class="tab-l"></span><span class="tab-r"></span></a></li>
+
+{% endblock %}
+
+{% block indice %}
+
+    <strong>Inicio</strong></p>
+
+{% endblock %}
+
+{% block content %}
+<!-- Content -->
+    {{ museos | safe }}
+
+{% endblock %}
+
+
+{% block column %}
+    <div id="col" class="noprint">
+        <div id="col-in">
+
+        <!-- Opciones -->
+        <h3><span>Opciones</span></h3>
+
+        <div id="donwload" class="noprint">
+            <form action="" method="POST">
+                <fieldset><legend>Descargar</legend>
+                    <label><span class="noscreen">Descargar:</span>
+                    <input type="submit" value="Descargar">
+                </fieldset>
+            </form>
+        </div>
+
+        <div id="accesible" class="noprint">
+            <form action="" method="POST">
+                <fieldset><legend>Filtrar accesibilidad</legend>
+                    <label><span class="noscreen">Accesible:</span>
+                    <input type="submit" value="Accesible">
+                </fieldset>
+            </form>
+        </div> <!-- /Opciones -->
+
+          <!-- Usuarios -->
+        <h3 ><span><a href="#">Usuarios</a></span></h3>
+
+        <ul id="links">
+              {{ usuarios | safe }}
+        </ul>
+
+        <hr class="noscreen" /> <!-- /Usuarios -->
+
+
+
+
+
+        <!-- About Me -->
+        <h3><span><a href="#">About Me</a></span></h3>
+
+        <div id="about-me">
+            <p>
+            {% load static %}
+
+            <img src="{% static 'museos/design/tmp_photo.gif'  %}" id="me" alt="Yeah, it´s me!" />
+            <strong>John Doe</strong><br />
+            Age: 26<br />
+            Dallas, TX<br />
+            <a href="#">Profile on MySpace</a></p>
+        </div> <!-- /about-me -->
+
+        <hr class="noscreen" />
+
+        <!-- Category -->
+        <h3 ><span>Category</span></h3>
+
+        <ul id="category">
+            <li id="category-active"><a href="#">Selected category</a></li> <!-- Active -->
+            <li><a href="#">Category</a></li>
+            <li><a href="#">Category</a></li>
+            <li><a href="#">Category</a></li>
+            <li><a href="#">Category</a></li>
+        </ul>
+
+        <hr class="noscreen" />
+
+        <!-- Archive -->
+        <h3><span>Archive</span></h3>
+
+        <ul id="archive">
+           <li><a href="#">January 2007</a></li>
+            <li><a href="#">December 2006</a></li>
+            <li><a href="#">November 2006</a></li>
+            <li><a href="#">October 2006</a></li>
+            <li><a href="#">September 2006</a></li>
+            <li id="archive-active"><a href="#">August 2006</a></li> <!-- Active -->
+            <li><a href="#">July 2006</a></li>
+            <li><a href="#">June 2006</a></li>
+            <li><a href="#">May 2006</a></li>
+            <li><a href="#">April 2006</a></li>
+            <li><a href="#">March 2006</a></li>
+            <li><a href="#">February 2006</a></li>
+            <li><a href="#">January 2006</a></li>
+        </ul>
+
+        <hr class="noscreen" />
+
+        <!-- Links -->
+        <h3><span>Links</span></h3>
+
+        <ul id="links">
+            <li><a href="#">Something</a></li>
+            <li><a href="#">Something</a></li>
+            <li><a href="#">Something</a></li>
+            <li><a href="#">Something</a></li>
+            <li><a href="#">Something</a></li>
+        </ul>
+
+        <hr class="noscreen" />
+
+
+        </div> <!-- /col-in -->
+    </div> <!-- /col -->
+
+
+{% endblock %}
