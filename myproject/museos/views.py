@@ -211,7 +211,9 @@ def museo_all(request):
         museos = print_museos(distrito)
 
     template = get_template('museos/museos.html')
-    return HttpResponse(template.render(Context({'select': select_box(),
+    return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
+                                                'name': request.user.username,
+                                                'select': select_box(),
                                                 'content': museos})))
 
 @csrf_exempt
@@ -241,7 +243,9 @@ def museo_id(request, mid):
             template = get_template('museos/museo-id-private.html')
         else:
             template = get_template('museos/museo-id.html')
-        return HttpResponse(template.render(Context({'title': museo.nombre,
+        return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
+                                                     'name': request.user.username,
+                                                     'title': museo.nombre,
                                                      'content': info,
                                                      'comentarios': comentarios})))
 
@@ -280,7 +284,9 @@ def usuario(request, nombre):
             template = get_template('museos/usuario-private.html')
         else:
             template = get_template('museos/usuario.html')
-        return HttpResponse(template.render(Context({'usuario': usuario.username,
+        return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
+                                                    'name': request.user.username,
+                                                    'usuario': usuario.username,
                                                     'title': usuario.usuario.pagina,
                                                     'content': nota + info})))
     except (User.DoesNotExist, Usuario.DoesNotExist) as e:
@@ -292,7 +298,8 @@ def usuario_xml(request, name):
 
 def about(request):
     template = get_template('museos/about.html')
-    return HttpResponse(template.render(Context({'content': 'About'})))
+    return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
+                                                'name': request.user.username})))
 
 @csrf_exempt
 def login_user(request):
