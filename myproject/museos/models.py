@@ -31,7 +31,7 @@ class Usuario(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Usuario.objects.create(usuario=instance)
+        Usuario.objects.create(usuario=instance, pagina='Pagina de ' + instance.username)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
