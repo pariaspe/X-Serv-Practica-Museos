@@ -47,16 +47,29 @@
         </div>
 
         <!-- Search -->
-        <div id="search" class="noprint">
-            <form action="" method="get">
-                <fieldset><legend>Búsqueda</legend>
-                    <label><span class="noscreen">Find:</span>
-                    <span id="search-input-out"><input type="text" name="" id="search-input" size="30" /></span></label>
+        <div id="login" class="noprint">
+            {% if aut %}
+                <form action="/logout" method="get">
+                    <fieldset><legend>Logout</legend>
+                        <span><h3>Logged in as {{ name }}</h3></span>
+                        {% load static %}
+
+                        <input type="image" src="{% static 'museos/design/search_submit.gif' %}" id="submit" value="OK" /></p>
+                    </fieldset>
+                </form>
+            {% else %}
+            <form action="/login" method="post">
+                <fieldset><legend>Login</legend>
+                    <p><label><span class="noscreen">Username:</span>
+                    <span id="username-input-out"><input type="text" name="username" id="username-input" size="30" /></span></label></p>
+                    <p><label><span class="noscreen">Password:</span>
+                    <span id="password-input-out"><input type="password" name="password" id="password-input" size="30" /></span></label></p>
                     {% load static %}
 
-                    <input type="image" src="{% static 'museos/design/search_submit.gif' %}" id="search-submit" value="OK" />
+                    <input type="image" src="{% static 'museos/design/search_submit.gif' %}" id="submit" value="OK" />
                 </fieldset>
             </form>
+            {% endif %}
         </div> <!-- /search -->
 
     </div> <!-- /header -->
