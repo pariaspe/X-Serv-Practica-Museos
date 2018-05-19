@@ -23,6 +23,8 @@ class Usuario(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     pagina = models.CharField(max_length=64, default='Pagina de usuario')
     likes = models.ManyToManyField(Museo, through='MuseoLike', blank=True)
+    tam_letra_css = models.IntegerField(default=11)
+    color_fondo_css = models.CharField(max_length=32, default='rgb(242, 245, 254)')
 
     def __str__(self):
         return self.usuario.username
