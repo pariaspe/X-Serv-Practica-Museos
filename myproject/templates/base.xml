@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<canal>
+    <recurso>http://localhost:8000/{{ usuario | safe }}/xml</recurso>
+    <creado>{{ fecha }}</creado>
+    <creador>{{ creador }}</creador>
+
+    {{ content | safe }}
+
+</canal>

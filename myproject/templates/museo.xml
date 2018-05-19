@@ -1,0 +1,25 @@
+<contenido>
+    <tipo>EntidadesYOrganismos</tipo>
+    <atributos idioma="es">
+        <atributo nombre="ID-ENTIDAD">{{ id }}</atributo>
+        <atributo nombre="NOMBRE">{{ nombre }}</atributo>
+        <atributo nombre="DESCRIPCION-ENTIDAD">{{ descripcion }}</atributo>
+        <atributo nombre="ACCESIBILIDAD">{{ accesibilidad }}</atributo>
+        <atributo nombre="CONTENT-URL">{{ url }}</atributo>
+        <atributo nombre="LOCALIZACION">
+            <atributo nombre="NOMBRE-VIA">{{ via }}</atributo>
+            <atributo nombre="CLASE-VIAL">{{ clase }}</atributo>
+            <atributo nombre="NUM">{{ num }}</atributo>
+            <atributo nombre="LOCALIDAD">{{ localidad }}</atributo>
+            <atributo nombre="PROVINCIA">MADRID</atributo>
+            <atributo nombre="CODIGO-POSTAL">{{ cp }}</atributo>
+            <atributo nombre="BARRIO">{{ barrio }}</atributo>
+            <atributo nombre="DISTRITO">{{ distrito }}</atributo>
+        </atributo>
+        <atributo nombre="DATOSCONTACTOS">
+            <atributo nombre="TELEFONO">{{ tlf }}</atributo>
+            <atributo nombre="EMAIL">{{ email }}</atributo>
+        </atributo>
+        <atributo nombre="TIPO">/contenido/entidadesYorganismos/Museos</atributo>
+    </atributos>
+</contenido>
