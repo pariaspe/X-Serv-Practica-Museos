@@ -18,7 +18,7 @@ def print_museos(distrito):
         museos = Museo.objects.all()
     else:
         museos = Museo.objects.filter(distrito=distrito)
-    lista = 'Lista de museos:<ol>'
+    lista = '<ol>'
     for museo in museos:
         lista += '<li><a href="museos/' + str(museo.n_id) + '">' + museo.nombre + '</a></li>'
     lista += '</ol>'
@@ -29,35 +29,46 @@ def print_accesibles(distrito):
         museos = Museo.objects.filter(accesibilidad=True)
     else:
         museos = Museo.objects.filter(accesibilidad=True).filter(distrito=distrito)
-    lista = 'Lista de museos:<ol>'
+    lista = '<ol>'
     for museo in museos:
         lista += '<li><a href="museos/' + str(museo.n_id) + '">' + museo.nombre + '</a></li>'
     lista += '</ol>'
     return lista
 
+formato_museo = """
+<div class="article">
+<h2><span><a href="museos/{url}">{name}</a></span></h2>
+<p class="info noprint">
+    <span class="cat">{direccion}</span><span class="noscreen">,</span>
+</p>
+
+<p>{info}</p>
+
+<p class="btn-more box noprint"><strong><a href="museos/{url}">Más</a></strong></p>
+</div> <!-- /article -->
+
+<hr class="noscreen" />
+"""
+
 def print_most_accesibles(items):
     cont = 0
-    lista = 'Lista de museos más comentados:<ol>'
+    lista = ''
     for item in items:
         museo = Museo.objects.get(id=item[0])
         if museo.accesibilidad:
-            lista += '<li>' + museo.nombre + '<br/>' + museo.direccion + '<br/>'
-            lista += '<a href="museos/' + str(museo.n_id) + '">Más información</a><br/><br/>'
+            lista += formato_museo.format(url=str(museo.n_id), name=museo.nombre,
+             direccion=museo.direccion, distrito=museo.distrito, info=museo.descripcion)
             cont += 1
-            print(cont)
             if cont == 5:
                 break
-    lista += '</ol>'
     return lista
 
 def print_most(items):
-    cont = 0
-    lista = 'Lista de museos más comentados:<ol>'
+    lista = ''
     for item in items:
         museo = Museo.objects.get(id=item[0])
-        lista += '<li>' + museo.nombre + '<br/>' + museo.direccion + '<br/>'
-        lista += '<a href="museos/' + str(museo.n_id) + '">Más información</a><br/><br/>'
-    lista += '</ol>'
+        lista += formato_museo.format(url=str(museo.n_id), name=museo.nombre,
+         direccion=museo.direccion, distrito=museo.distrito, info=museo.descripcion)
     return lista
 
 def update_museos():
@@ -84,14 +95,13 @@ def update_museos():
 
 def print_usuarios():
     usuarios = User.objects.all()
-    lista = 'Lista de usuarios:<ul>'
+    lista = ''
     for usuario in usuarios:
         try:
             ñoño = Usuario.objects.get(usuario=usuario) # TODO ñoño no es utilizado
-            lista += '<li><a href="' + usuario.username + '">' + usuario.username + '</a></li>'
+            lista += '<li>' + usuario.usuario.pagina + '<a href="' + usuario.username + '">' + usuario.username + '</a></li>'
         except Usuario.DoesNotExist:
             pass
-    lista += '</ul>'
     return lista
 
 def select_box():
@@ -156,6 +166,7 @@ def barra(request):
                 setAccesible = True
         except KeyError:
             accesible = True
+            setAccesible = True
     if request.method == 'GET':
         cookies = request.COOKIES
         try:
@@ -172,9 +183,12 @@ def barra(request):
         museos = print_most(comentarios)
 
     usuarios = print_usuarios()
-    template = get_template('annotated.html')
-    response = HttpResponse(template.render(Context({'title': 'Mis Museos',
-                                                 'content': museos + usuarios})))
+
+    template = get_template('museos/main.html')
+    context = Context({'museos': museos,
+                       'usuarios': usuarios})
+    response = HttpResponse(template.render(context))
+
     if setAccesible:
         response.set_cookie('accesible', value=accesible)
     return response
@@ -193,9 +207,8 @@ def museo_all(request):
     else:
         museos = print_museos(distrito)
 
-    template = get_template('museos.html')
-    return HttpResponse(template.render(Context({'title': 'Lista de museos',
-                                                'select': select_box(),
+    template = get_template('museos/museos.html')
+    return HttpResponse(template.render(Context({'select': select_box(),
                                                 'content': museos})))
 
 @csrf_exempt
@@ -222,9 +235,9 @@ def museo_id(request, mid):
         comentarios = nota + print_comentarios(museo)
 
         if request.user.is_authenticated():
-            template = get_template('museo-id-private.html')
+            template = get_template('museos/museo-id-private.html')
         else:
-            template = get_template('museo-id.html')
+            template = get_template('museos/museo-id.html')
         return HttpResponse(template.render(Context({'title': museo.nombre,
                                                      'content': info,
                                                      'comentarios': comentarios})))
@@ -253,10 +266,11 @@ def usuario(request, nombre):
         info = print_museos_likes(nombre, likes, n)
 
         if nombre == request.user.username:
-            template = get_template('usuario-private.html')
+            template = get_template('museos/usuario-private.html')
         else:
-            template = get_template('usuario.html')
-        return HttpResponse(template.render(Context({'title': usuario.usuario.pagina,
+            template = get_template('museos/usuario.html')
+        return HttpResponse(template.render(Context({'usuario': usuario.username,
+                                                    'title': usuario.usuario.pagina,
                                                     'content': nota + info})))
     except (User.DoesNotExist, Usuario.DoesNotExist) as e:
         return HttpResponseNotFound('404 NOT FOUND')
@@ -266,4 +280,5 @@ def usuario_xml(request, name):
     return HttpResponse('Xml de ' + name)
 
 def about(request):
-    return HttpResponse('About')
+    template = get_template('museos/about.html')
+    return HttpResponse(template.render(Context({'content': 'About'})))
