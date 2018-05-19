@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from .models import Museo, Usuario, Comentario, MuseoLike
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.template.loader import get_template
 from django.template import Context
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login
 
 from xml.sax import make_parser
 from urllib import request, error
@@ -185,7 +186,9 @@ def barra(request):
     usuarios = print_usuarios()
 
     template = get_template('museos/main.html')
-    context = Context({'museos': museos,
+    context = Context({'aut': request.user.is_authenticated(),
+                       'name': request.user.username,
+                       'museos': museos,
                        'usuarios': usuarios})
     response = HttpResponse(template.render(context))
 
@@ -282,3 +285,16 @@ def usuario_xml(request, name):
 def about(request):
     template = get_template('museos/about.html')
     return HttpResponse(template.render(Context({'content': 'About'})))
+
+@csrf_exempt
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', None)
+        password = request.POST.get('password', None)
+        print(username + ' ' + str(password))
+        user = authenticate(username=username, password=password)
+    if user is None:
+        return HttpResponseRedirect('/')
+    else:
+        login(request, user)
+        return HttpResponseRedirect('/')
