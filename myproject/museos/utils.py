@@ -69,7 +69,7 @@ def update_museos():
             museo.save()
         except IntegrityError:
             pass
-            #Museo.objects.filter(nombre=MuseoHandler.titles[i]).update(link=BarrapuntoHandler.links[i]) # TODO
+            #Museo.objects.filter(nombre=MuseoHandler.titles[i]).update(link=BarrapuntoHandler.links[i])
 
     return print_museos('')
 

@@ -40,10 +40,8 @@ def barra(request):
             accesible = cookies['accesible'] == 'True'
         except KeyError:
             accesible = False
-
         error_login = request.GET.get('login', '') == 'False'
         error_created = request.GET.get('created', '') == 'False'
-        print(error_login, error_created)
 
     alert = ''
     if error_login:
@@ -94,6 +92,12 @@ def museo_all(request):
                                                 'select': select_box(),
                                                 'distritos': get_distritos(distrito),
                                                 'content': museos})))
+
+def usuario_all(request):
+    template = get_template('museos/usuarios.html')
+    return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
+                                                'name': request.user.username,
+                                                'content': print_usuarios()})))
 
 @csrf_exempt
 def museo_id(request, mid):
@@ -203,7 +207,6 @@ def login_user(request):
                 user.save()
             except IntegrityError:
                 error = '?created=False'
-                print('ya existe')
         else:
             user = authenticate(username=username, password=password)
 

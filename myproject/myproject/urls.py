@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^$', 'museos.views.barra'),
     url(r'^about$', 'museos.views.about'),
     url(r'^museos$', 'museos.views.museo_all'),
+    url(r'^usuarios$', 'museos.views.usuario_all'),
     url(r'^museos/(\d+)$', 'museos.views.museo_id'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login', 'museos.views.login_user'),
