@@ -103,7 +103,8 @@ code, kbd, samp {font-family:monospace; font-size:110%;}
     #header #login #username-input {width:110px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
     #header #login #password-input-out {position:absolute; top:10; right:75px; width:125px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input2.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
     #header #login #password-input {width:110px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
-    #header #login #submit {position:absolute; top:20; right:0px;}
+    #header #login #submit {position:absolute; width: 75px; top:0; right:0px;}
+    #header #login #submit-nuevo {position:absolute; width: 75px; top:20; right:0px;}
     #header #login fieldset {margin:0; padding:0; border:0;}
     #header #login fieldset {width:200px;}
     #header #login legend {display:none;}
