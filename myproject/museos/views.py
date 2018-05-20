@@ -78,6 +78,7 @@ def museo_all(request):
     return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
                                                 'name': request.user.username,
                                                 'select': select_box(),
+                                                'distritos': get_distritos(distrito),
                                                 'content': museos})))
 
 @csrf_exempt
