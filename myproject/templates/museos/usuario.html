@@ -33,6 +33,27 @@
         <h1>{{ title | safe }}</h1>
     </div>
 
+    {% if author %}
+    <div>
+        <form action="" method="POST">
+            Nuevo nombre para la página:<br>
+            <input type="text" name="pagina">
+            <input type="submit" value="Cambiar"><br/>
+        </form>
+    </div>
+
+    <div>
+        <form action="" method="POST">
+            <br/>Nuevo estilo para la página:<br/>
+            Tamaño letra:
+            <input type="text" name="tam"><br/>
+            Color fondo:
+            <input type="text" name="color"><br/>
+            <input type="submit" value="Cambiar"><br/>
+        </form>
+    </div>
+    {% endif %}
+
     <div id="content">
       {{ content | safe }}
     </div>

@@ -37,6 +37,17 @@
       {{ content | safe }}
     </div>
 
+    {% if aut %}
+    <div>
+        <form action="" method="POST">
+            Nuevo comentario:<br>
+            <input type="text" name="comentario"><br>
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+    {% endif %}
+
+
     <div id="comentarios">
       {{ comentarios | safe }}
     </div>
