@@ -27,11 +27,11 @@
         <h1>{{ title | safe }}</h1>
     </div>
 
-    <div>
+    <p><div>
         <form action="" method="POST">
             <input type="submit" value="Añadir">
         </form>
-    </div>
+    </div></p>
 
     <div id="content">
       {{ content | safe }}
@@ -48,9 +48,9 @@
     {% endif %}
 
 
-    <div id="comentarios">
+    <p><div id="comentarios">
       {{ comentarios | safe }}
-    </div>
+    </div></p>
 {% endblock %}
 
 

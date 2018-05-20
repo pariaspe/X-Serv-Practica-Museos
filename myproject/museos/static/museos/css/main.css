@@ -184,6 +184,9 @@ code, kbd, samp {font-family:monospace; font-size:110%;}
     #content .btn-more a {display:block; position:absolute; top:0; right:0; width:67px; _width:95px; height:21px; margin:0; padding:0 0 0 28px; background:url("../design/btn_more.gif") 0 0 no-repeat; color:#FFF; text-decoration:none;}
     #content .btn-more a:hover {background:url("../design/btn_more.gif") -95px 0 no-repeat;}
 
+    /* Content - Style */
+    #content #form-style #input {width: 50px}
+
 /* Right column */
 #col {float:left; width:200px; margin:0; padding:0; background:#CEDBF9 url("../design/col_bg.gif") 0 0 repeat-y;}
 #col-in {padding:20px 10px; background:url("../design/col_top.gif") 0 0 no-repeat;}
@@ -191,6 +194,9 @@ code, kbd, samp {font-family:monospace; font-size:110%;}
 
     /* Right column - Distrito */
     #col #select select {width: 180px}
+
+    /* Right column - Opciones */
+    #col legend {color:#192666}
 
     /* Right column - About me */
     #col #about-me {margin-bottom:15px; line-height:130%;}
