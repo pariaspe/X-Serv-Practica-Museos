@@ -20,6 +20,8 @@ from museos.utils import *
 @csrf_exempt
 def barra(request):
     setAccesible = False
+    error_login = False
+    error_created = False
     if request.method == 'POST':
         cookies = request.COOKIES
         try:
@@ -39,6 +41,17 @@ def barra(request):
         except KeyError:
             accesible = False
 
+        error_login = request.GET.get('login', '') == 'False'
+        error_created = request.GET.get('created', '') == 'False'
+        print(error_login, error_created)
+
+    alert = ''
+    if error_login:
+        alert = '<script type="text/javascript">alert("Usuario no registrado.");</script>'
+    elif error_created:
+        alert = '<script type="text/javascript">alert("El usuario ya existe.");</script>'
+
+
     if accesible:
         comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:10]
         museos = print_most_accesibles(comentarios)
@@ -53,6 +66,7 @@ def barra(request):
     context = Context({'aut': request.user.is_authenticated(),
                        'name': request.user.username,
                        'museos': museos,
+                       'alert': alert,
                        'usuarios': usuarios})
     response = HttpResponse(template.render(context))
 
@@ -177,13 +191,27 @@ def about(request):
 
 @csrf_exempt
 def login_user(request):
+    user = None
+    error = ''
     if request.method == 'POST':
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
-        print(username + ' ' + str(password))
-        user = authenticate(username=username, password=password)
+
+        if request.POST['login'] == 'New':
+            try:
+                user = User.objects.create_user(username, '', password)
+                user.save()
+            except IntegrityError:
+                error = '?created=False'
+                print('ya existe')
+        else:
+            user = authenticate(username=username, password=password)
+
     if user is None:
-        return HttpResponseRedirect('/')
+        if error == '':
+            return HttpResponseRedirect('/?login=False')
+        else:
+            return HttpResponseRedirect('/' + error)
     else:
         login(request, user)
         return HttpResponseRedirect('/')
