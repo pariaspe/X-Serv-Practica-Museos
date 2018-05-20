@@ -278,7 +278,17 @@ def usuario(request, nombre):
             n = request.GET.get('show', '0')
             n = int(n)*5
 
-        likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
+        cookies = request.COOKIES
+        try:
+            accesible = cookies['accesible'] == 'True'
+        except KeyError:
+            accesible = False
+
+        if accesible:
+            likes = MuseoLike.objects.filter(usuario=usuario.usuario).filter(museo__accesibilidad=True).order_by('-fecha')
+        else:
+            likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
+
         info = print_museos_likes(nombre, likes, n)
 
         if nombre == request.user.username:
