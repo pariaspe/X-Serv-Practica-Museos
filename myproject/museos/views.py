@@ -103,10 +103,7 @@ def museo_id(request, mid):
         info = print_museo_info(museo)
         comentarios = nota + print_comentarios(museo)
 
-        if request.user.is_authenticated():
-            template = get_template('museos/museo-id-private.html')
-        else:
-            template = get_template('museos/museo-id.html')
+        template = get_template('museos/museo-id.html')
         return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
                                                      'name': request.user.username,
                                                      'title': museo.nombre,
@@ -154,14 +151,12 @@ def usuario(request, nombre):
 
         info = print_museos_likes(nombre, likes, n)
 
-        if nombre == request.user.username:
-            template = get_template('museos/usuario-private.html')
-        else:
-            template = get_template('museos/usuario.html')
+        template = get_template('museos/usuario.html')
         return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
                                                     'name': request.user.username,
                                                     'usuario': usuario.username,
                                                     'title': usuario.usuario.pagina,
+                                                    'author': nombre == request.user.username,
                                                     'content': nota + info})))
     except (User.DoesNotExist, Usuario.DoesNotExist) as e:
         return HttpResponseNotFound('404 NOT FOUND')

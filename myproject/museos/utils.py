@@ -26,29 +26,16 @@ def print_accesibles(distrito):
     lista += '</ol>'
     return lista
 
-formato_museo = """
-<div class="article">
-<h2><span><a href="museos/{url}">{name}</a></span></h2>
-<p class="info noprint">
-    <span class="cat">{direccion}</span><span class="noscreen">,</span>
-</p>
-
-<p>{info}</p>
-
-<p class="btn-more box noprint"><strong><a href="museos/{url}">Más</a></strong></p>
-</div> <!-- /article -->
-
-<hr class="noscreen" />
-"""
-
 def print_most_accesibles(items):
     cont = 0
     lista = ''
+    template = get_template('formato-museo.html')
     for item in items:
         museo = Museo.objects.get(id=item[0])
         if museo.accesibilidad:
-            lista += formato_museo.format(url=str(museo.n_id), name=museo.nombre,
-             direccion=museo.direccion, distrito=museo.distrito, info=museo.descripcion)
+            context = Context({'url': str(museo.n_id), 'name': museo.nombre,
+                                'direccion': museo.direccion, 'distrito': museo.distrito, 'info': museo.descripcion})
+            lista += template.render(context)
             cont += 1
             if cont == 5:
                 break
@@ -56,10 +43,12 @@ def print_most_accesibles(items):
 
 def print_most(items):
     lista = ''
+    template = get_template('formato-museo.html')
     for item in items:
         museo = Museo.objects.get(id=item[0])
-        lista += formato_museo.format(url=str(museo.n_id), name=museo.nombre,
-         direccion=museo.direccion, distrito=museo.distrito, info=museo.descripcion)
+        context = Context({'url': str(museo.n_id), 'name': museo.nombre,
+                            'direccion': museo.direccion, 'distrito': museo.distrito, 'info': museo.descripcion})
+        lista += template.render(context)
     return lista
 
 def update_museos():
