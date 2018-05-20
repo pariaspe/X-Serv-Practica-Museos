@@ -44,7 +44,11 @@
     </div>
 
     <div id="content">
-      {{ content | safe }}
+        {{ content | safe }}
+    </div>
+
+    <div>
+        <a href="/{{ usuario | safe}}/xml">XML</a>
     </div>
 {% endblock %}
 
