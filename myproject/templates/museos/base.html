@@ -66,11 +66,12 @@
             <form action="/login" method="post">
                 <fieldset><legend>Login</legend>
                     <p><label><span class="noscreen">Username:</span>
-                    <span id="username-input-out"><input type="text" name="username" id="username-input" size="30" /></span></label></p>
+                    <span id="username-input-out"><input type="text" name="username" id="username-input" size="30" /></span></label>
+                    <span><input type="submit" id="submit" name="login" value="Login"/></span></p>
+
                     <p><label><span class="noscreen">Password:</span>
                     <span id="password-input-out"><input type="password" name="password" id="password-input" size="30" /></span></label>
-
-                    <span><input type="submit" id="submit" value="Login"/></span></p>
+                    <span><input type="submit" id="submit-nuevo" name="login" value="New"/></span></p>
                 </fieldset>
             </form>
             {% endif %}
