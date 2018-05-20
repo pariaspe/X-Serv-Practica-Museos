@@ -90,14 +90,27 @@ code, kbd, samp {font-family:monospace; font-size:110%;}
     /* Header - Login */
     #header #login {position:absolute; top:35px; right:20px;}
     #header #login form {position:relative;}
-    #header #login #username-input-out {position:absolute; top:0; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
-    #header #login #username-input {width:140px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
-    #header #login #password-input-out {position:absolute; top:10; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
-    #header #login #password-input {width:140px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
-    #header #login #submit {position:absolute; top:0; right:0px;}
+    #header #login #username-input-out {position:absolute; top:0; right:75px; width:125px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input2.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #username-input {width:110px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #password-input-out {position:absolute; top:10; right:75px; width:125px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input2.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #password-input {width:110px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
+    #header #login #submit {position:absolute; top:20; right:0px;}
     #header #login fieldset {margin:0; padding:0; border:0;}
     #header #login fieldset {width:200px;}
     #header #login legend {display:none;}
+    #header #login #msg {position:absolute; top:15; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; font:bold 90%/100% "verdana",sans-serif; color:#FFFF;}
+
+    /* Header - Logout */
+    #header #logout {position:absolute; top:35px; right:20px;}
+    #header #logout form {position:relative;}
+    #header #logout #username-input-out {position:absolute; top:0; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
+    #header #logout #username-input {width:140px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
+    #header #logout #password-input-out {position:absolute; top:10; right:45px; width:155px; height:28px; margin:0; padding:0; border:0; background:url("../design/search_input.gif") 0 0 no-repeat; font:bold 90%/100% "verdana",sans-serif; color:#192666;}
+    #header #logout #password-input {width:140px; margin:5px 8px; padding:3px 0; border:0; background:#FFF; font:bold 100%/100% "verdana",sans-serif; color:#192666;}
+    #header #logout #submit {position:absolute; top:0; right:0px;}
+    #header #logout fieldset {margin:0; padding:0; border:0;}
+    #header #logout fieldset {width:200px;}
+    #header #logout legend {display:none;}
 
 /* Main menu (tabs) */
 #tabs {background:#192666; margin:0 5px; padding:10px 0 0 0; _height:1px;}
@@ -122,6 +135,7 @@ code, kbd, samp {font-family:monospace; font-size:110%;}
 
 /* Page (2 columns) */
 #page {width:770px; min-height:1px; background:#FFF url("../design/bg_page.gif") 0 0 repeat-y; _height:1px;}
+#page-white {width:770px; min-height:1px; background:#FFF url("../design/bg_page_white.gif") 0 0 repeat-y; _height:1px;}
 #page-in {min-height:1px; padding:10px 0; background:url("../design/bg_page_in.jpg") 0 0 no-repeat; _height:1px;}
 
 /* Strip */
@@ -164,6 +178,9 @@ code, kbd, samp {font-family:monospace; font-size:110%;}
 #col {float:left; width:200px; margin:0; padding:0; background:#CEDBF9 url("../design/col_bg.gif") 0 0 repeat-y;}
 #col-in {padding:20px 10px; background:url("../design/col_top.gif") 0 0 no-repeat;}
 #col h3 {padding:13px 15px 14px 15px; margin:0 -10px 15px -10px; background:#A0B9F3 url("../design/col_title_bg.gif") 0 0 repeat-y; color:#192666;}
+
+    /* Right column - Distrito */
+    #col #select select {width: 180px}
 
     /* Right column - About me */
     #col #about-me {margin-bottom:15px; line-height:130%;}

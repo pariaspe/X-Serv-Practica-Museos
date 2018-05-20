@@ -12,11 +12,20 @@
 
 {% endblock %}
 
+{% block rss %}
+
+    <p id="rss"><strong>RSS:</strong> <a href="/{{ usuario | safe}}/xml">museos</a></p>
+    <hr class="noscreen" />
+
+{% endblock %}
+
 {% block indice %}
 
     <a href="/">Inicio</a> &gt; <a href="#">Usuarios</a> &gt;  <strong>{{ usuario | safe }}</strong></p>
 
 {% endblock %}
+
+{% block page_type %}page-white{% endblock %}
 
 {% block content %}
 <!-- Content -->

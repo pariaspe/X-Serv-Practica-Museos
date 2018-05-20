@@ -51,10 +51,11 @@
             {% if aut %}
                 <form action="/logout" method="get">
                     <fieldset><legend>Logout</legend>
-                        <span><h3>Logged in as {{ name }}</h3></span>
-                        {% load static %}
+                        <input type="submit" id="submit" value="Logout"/>
+                        <span id="msg"><h3>Logged in: {{ name }}</h3></span>
+                        <!---{% load static %}
 
-                        <input type="image" src="{% static 'museos/design/search_submit.gif' %}" id="submit" value="OK" /></p>
+                        <input type="image" src="{% static 'museos/design/search_submit.gif' %}" id="submit" value="OK" /></p>--->
                     </fieldset>
                 </form>
             {% else %}
@@ -63,10 +64,9 @@
                     <p><label><span class="noscreen">Username:</span>
                     <span id="username-input-out"><input type="text" name="username" id="username-input" size="30" /></span></label></p>
                     <p><label><span class="noscreen">Password:</span>
-                    <span id="password-input-out"><input type="password" name="password" id="password-input" size="30" /></span></label></p>
-                    {% load static %}
+                    <span id="password-input-out"><input type="password" name="password" id="password-input" size="30" /></span></label>
 
-                    <input type="image" src="{% static 'museos/design/search_submit.gif' %}" id="submit" value="OK" />
+                    <span><input type="submit" id="submit" value="Login"/></span></p>
                 </fieldset>
             </form>
             {% endif %}
@@ -88,14 +88,13 @@
      </div> <!-- /tabs -->
 
     <!-- Page (2 columns) -->
-    <div id="page" class="box">
+    <div id="{% block page_type %}{% endblock %}" class="box">
     <div id="page-in" class="box">
 
         <div id="strip" class="box noprint">
 
             <!-- RSS feeds -->
-            <p id="rss"><strong>RSS:</strong> <a href="#">articles</a> / <a href="#">comments</a></p>
-            <hr class="noscreen" />
+            {% block rss %}{% endblock %}
 
             <!-- Breadcrumbs -->
             <p id="breadcrumbs">Estás en: {% block indice %}{% endblock %}
@@ -122,7 +121,7 @@
         <hr class="noscreen" />
 
         <p id="createdby">created by <a href="http://www.nuvio.cz">Nuvio | Webdesign</a> <!-- DON´T REMOVE, PLEASE! --></p>
-        <p id="copyright">&copy; 2018 <a href="mailto:p.ariaspe@alumnos.urjc.es">Pedro Arias</a></p>
+        <p id="copyright">Esta aplicacion utiliza datos del portal de datos abiertos de la ciudad de Madrid.<br/>&copy; 2018 <a href="mailto:p.ariaspe@alumnos.urjc.es">Pedro Arias</a></p>
     </div> <!-- /footer -->
 
 </div> <!-- /main -->

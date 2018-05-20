@@ -18,6 +18,8 @@
 
 {% endblock %}
 
+{% block page_type %}page{% endblock %}
+
 {% block content %}
 <!-- Content -->
     <div id="title"><h1>Lista de Museos</h1></div>
@@ -36,11 +38,22 @@
         <h3><span>Opciones</span></h3>
 
         <div id="select">
-          <form action="/museos">
+          <p><form action="/museos">
             {{ select | safe }}
             <input type="submit" value="Filtrar">
-          </form>
+          </p></form>
         </div>
+
+        <!-- Category -->
+        <h3 ><span>Distritos</span></h3>
+
+        <ul id="category">
+            <li id="category-active"><a href="#">Selected category</a></li> <!-- Active -->
+            <li><a href="#">Category</a></li>
+            <li><a href="#">Category</a></li>
+            <li><a href="#">Category</a></li>
+            <li><a href="#">Category</a></li>
+        </ul>
 
       </div> <!-- /col-in -->
   </div> <!-- /col -->
