@@ -330,7 +330,7 @@ def get_museos_xml(likes):
     return museos
 
 def usuario_xml(request, name):
-    template = get_template('prueba.xml')
+    template = get_template('base.xml')
     usuario = User.objects.get(username=name)
     likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
     content = get_museos_xml(likes)
