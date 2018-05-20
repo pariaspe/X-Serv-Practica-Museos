@@ -21,7 +21,7 @@
 
 {% block indice %}
 
-    <a href="/">Inicio</a> &gt; <a href="#">Usuarios</a> &gt;  <strong>{{ usuario | safe }}</strong></p>
+    <a href="/">Inicio</a> &gt; <a href="/usuarios">Usuarios</a> &gt;  <strong>{{ usuario | safe }}</strong></p>
 
 {% endblock %}
 
@@ -42,21 +42,21 @@
         </form>
     </div>
 
-    <div>
-        <form action="" method="POST">
+    <div id="style">
+        <form id="form-style" action="" method="POST">
             <br/>Nuevo estilo para la página:<br/>
             Tamaño letra:
-            <input type="text" name="tam"><br/>
+            <input id="input" type="text" name="tam"><br/>
             Color fondo:
-            <input type="text" name="color"><br/>
+            <input id="input" type="text" name="color"><br/>
             <input type="submit" value="Cambiar"><br/>
         </form>
     </div>
     {% endif %}
 
-    <div id="content">
-      {{ content | safe }}
-    </div>
+    <p><div id="content">
+        {{ content | safe }}
+    </div></p>
 {% endblock %}
 
 
