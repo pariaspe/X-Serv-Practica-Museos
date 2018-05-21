@@ -5,6 +5,8 @@
     <creado>{{ fecha }}</creado>
     <creador>{{ creador }}</creador>
 
-    {{ content | safe }}
+    <museos>
+        {{ content | safe }}
+    </museos>
 
 </canal>

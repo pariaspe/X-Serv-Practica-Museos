@@ -175,7 +175,7 @@ def usuario(request, nombre):
         return HttpResponseNotFound('404 NOT FOUND')
 
 def usuario_xml(request, name):
-    template = get_template('base.xml')
+    template = get_template('usuario_base.xml')
     usuario = User.objects.get(username=name)
     likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
     content = get_museos_xml(likes)
