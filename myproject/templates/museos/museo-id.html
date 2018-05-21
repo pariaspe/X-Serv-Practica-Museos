@@ -33,6 +33,12 @@
             <input type="submit" value="{{ value }}">
         </form>
     </div></p>
+    {% else %}
+    <p><div>
+        <form action="" method="POST">
+            <input type="submit" disabled="disabled" value="Añadir">
+        </form>
+    </div></p>
     {% endif %}
 
     <div id="content">
