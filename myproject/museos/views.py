@@ -54,15 +54,12 @@ def barra(request):
     else:
         comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:5]
 
-    museos = print_most(comentarios)
-    usuarios = print_usuarios()
-
     template = get_template('museos/main.html')
     context = Context({'aut': request.user.is_authenticated(),
                        'name': request.user.username,
-                       'museos': museos,
+                       'museos': print_most(comentarios),
                        'alert': alert,
-                       'usuarios': usuarios})
+                       'usuarios': print_usuarios()})
     response = HttpResponse(template.render(context))
 
     if setAccesible:

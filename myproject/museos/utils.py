@@ -64,7 +64,7 @@ def print_usuarios():
     for usuario in usuarios:
         try:
             _ = Usuario.objects.get(usuario=usuario) # El resultado no es utilizado
-            lista += '<li>' + usuario.usuario.pagina + '<a href="' + usuario.username + '">' + usuario.username + '</a></li>'
+            lista += '<li><b>' + usuario.usuario.pagina + '</b><br/><a href="' + usuario.username + '">' + usuario.username + '</a></li>'
         except Usuario.DoesNotExist:
             pass
     return lista
