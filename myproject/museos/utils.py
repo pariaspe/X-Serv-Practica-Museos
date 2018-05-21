@@ -26,21 +26,6 @@ def print_accesibles(distrito):
     lista += '</ol>'
     return lista
 
-def print_most_accesibles(items):
-    cont = 0
-    lista = ''
-    template = get_template('formato-museo.html')
-    for item in items:
-        museo = Museo.objects.get(id=item[0])
-        if museo.accesibilidad:
-            context = Context({'url': str(museo.n_id), 'name': museo.nombre,
-                                'direccion': museo.direccion, 'distrito': museo.distrito, 'info': museo.descripcion})
-            lista += template.render(context)
-            cont += 1
-            if cont == 5:
-                break
-    return lista
-
 def print_most(items):
     lista = ''
     template = get_template('formato-museo.html')
@@ -169,3 +154,26 @@ def get_museos_xml(likes):
                             'distrito': museo.distrito, 'tlf': museo.telefono, 'email': museo.email})
         museos += template.render(context)
     return museos
+
+def get_comentarios_xml(comentarios):
+    museos = ''
+    template = get_template('museo.xml')
+    for comentario in comentarios:
+        museo = Museo.objects.get(id=comentario[0])
+        accesibilidad = '1' if museo.accesibilidad else '0'
+        via, clase, num, localidad, cp = parse_direccion(museo.direccion)
+        context = Context({'id': museo.n_id, 'nombre': museo.nombre, 'descripcion': museo.descripcion,
+                            'accesibilidad': accesibilidad, 'url': museo.url, 'via': via,
+                            'clase': clase, 'num': num, 'localidad': localidad, 'cp': cp, 'barrio': museo.barrio,
+                            'distrito': museo.distrito, 'tlf': museo.telefono, 'email': museo.email})
+        museos += template.render(context)
+    return museos
+
+def get_usuarios_xml(usuarios):
+    usuarios_xml = ''
+    template = get_template('usuario.xml')
+    for usuario in usuarios:
+        context = Context({'username': usuario.username, 'date': usuario.date_joined, 'pagina': usuario.usuario.pagina,
+                            'tam': usuario.usuario.tam_letra_css, 'color': usuario.usuario.color_fondo_css})
+        usuarios_xml += template.render(context)
+    return usuarios_xml

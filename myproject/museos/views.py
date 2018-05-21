@@ -49,15 +49,12 @@ def barra(request):
     elif error_created:
         alert = '<script type="text/javascript">alert("El usuario ya existe.");</script>'
 
-
     if accesible:
-        comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:10]
-        museos = print_most_accesibles(comentarios)
-
+        comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count').filter(museo__accesibilidad=True)[:5]
     else:
         comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:5]
-        museos = print_most(comentarios)
 
+    museos = print_most(comentarios)
     usuarios = print_usuarios()
 
     template = get_template('museos/main.html')
@@ -192,6 +189,27 @@ def about(request):
     template = get_template('museos/about.html')
     return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
                                                 'name': request.user.username})))
+
+def main_xml(request):
+    if request.method == 'GET':
+        cookies = request.COOKIES
+        try:
+            accesible = cookies['accesible'] == 'True'
+        except KeyError:
+            accesible = False
+
+    if accesible:
+        comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count').filter(museo__accesibilidad=True)[:5]
+    else:
+        comentarios = Comentario.objects.values_list('museo').annotate(comentarios_count=Count('museo')).order_by('-comentarios_count')[:5]
+
+    usuarios = User.objects.all()
+
+    template = get_template('main.xml')
+    museos_xml = get_comentarios_xml(comentarios)
+    usuarios_xml = get_usuarios_xml(usuarios)
+    context = Context({'museos': museos_xml, 'usuarios': usuarios_xml})
+    return HttpResponse(template.render(context), content_type='text/xml')
 
 @csrf_exempt
 def login_user(request):

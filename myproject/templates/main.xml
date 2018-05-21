@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<canal>
+    <recurso>http://localhost:8000/</recurso>
+    <creado>{{ fecha }}</creado>
+    <creador>{{ creador }}</creador>
+
+    <museos>
+        {{ museos | safe }}
+    </museos>
+
+    <usuarios>
+        {{ usuarios | safe }}
+    </usuarios>
+
+</canal>

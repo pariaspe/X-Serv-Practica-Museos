@@ -1,0 +1,7 @@
+<usuario>
+    <username>{{ username }}</username>
+    <date>{{ date }}</date>
+    <pagina>{{ pagina }}</pagina>
+    <letra>{{ tam }}</letra>
+    <color>{{ color }}</color>
+</usuario>
