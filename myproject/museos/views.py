@@ -247,6 +247,7 @@ def login_user(request):
         else:
             return HttpResponseRedirect('/' + error)
     else:
+        user = authenticate(username=username, password=password)
         login(request, user)
         return HttpResponseRedirect('/')
 
