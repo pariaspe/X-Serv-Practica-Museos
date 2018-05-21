@@ -44,6 +44,9 @@ class MuseoLike(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('museo', 'usuario')
+
 class Comentario(models.Model):
     usuario = models.ForeignKey(Usuario)
     museo = models.ForeignKey(Museo)
