@@ -191,7 +191,7 @@ def usuario(request, nombre):
         return HttpResponseNotFound('404 NOT FOUND')
 
 def usuario_xml(request, name):
-    template = get_template('usuario_base.xml')
+    template = get_template('museos/usuario_base.xml')
     usuario = User.objects.get(username=name)
     likes = MuseoLike.objects.filter(usuario=usuario.usuario).order_by('-fecha')
     content = get_museos_xml(likes)
@@ -218,7 +218,7 @@ def main_xml(request):
 
     usuarios = User.objects.all()
 
-    template = get_template('main.xml')
+    template = get_template('museos/main.xml')
     museos_xml = get_comentarios_xml(comentarios)
     usuarios_xml = get_usuarios_xml(usuarios)
     context = Context({'museos': museos_xml, 'usuarios': usuarios_xml})

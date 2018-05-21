@@ -34,7 +34,7 @@ def print_accesibles(distrito):
 
 def print_most(items):
     lista = ''
-    template = get_template('formato-museo.html')
+    template = get_template('museos/formato-museo.html')
     for item in items:
         museo = Museo.objects.get(id=item[0])
         context = Context({'url': str(museo.n_id), 'name': museo.nombre,
@@ -148,7 +148,7 @@ def parse_direccion(direccion):
 
 def get_museos_xml(likes):
     museos = ''
-    template = get_template('museo.xml')
+    template = get_template('museos/museo.xml')
     for like in likes:
         museo = like.museo
         fecha = like.fecha
@@ -163,7 +163,7 @@ def get_museos_xml(likes):
 
 def get_comentarios_xml(comentarios):
     museos = ''
-    template = get_template('museo.xml')
+    template = get_template('museos/museo.xml')
     for comentario in comentarios:
         museo = Museo.objects.get(id=comentario[0])
         accesibilidad = '1' if museo.accesibilidad else '0'
@@ -177,7 +177,7 @@ def get_comentarios_xml(comentarios):
 
 def get_usuarios_xml(usuarios):
     usuarios_xml = ''
-    template = get_template('usuario.xml')
+    template = get_template('museos/usuario.xml')
     for usuario in usuarios:
         context = Context({'username': usuario.username, 'date': usuario.date_joined, 'pagina': usuario.usuario.pagina,
                             'tam': usuario.usuario.tam_letra_css, 'color': usuario.usuario.color_fondo_css})
