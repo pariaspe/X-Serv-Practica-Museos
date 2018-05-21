@@ -10,10 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 import datetime
 
-from xml.sax import make_parser
-from urllib import request, error
-from xml.sax.handler import ContentHandler
-import museos.parser
 from museos.utils import *
 
 # Create your views here.
@@ -26,14 +22,19 @@ def barra(request):
         cookies = request.COOKIES
         try:
             accesible = cookies['accesible'] == 'True'
-            if request.POST.get('upload'):
+            if request.POST['accion'] == 'Descargar':
                 update_museos()
             else:
                 accesible = not accesible
                 setAccesible = True
         except KeyError:
-            accesible = True
-            setAccesible = True
+            if request.POST['accion'] == 'Descargar':
+                update_museos()
+                accesible = False
+                setAccesible = False
+            else:
+                accesible = True
+                setAccesible = True
     if request.method == 'GET':
         cookies = request.COOKIES
         try:
@@ -120,6 +121,7 @@ def museo_id(request, mid):
         return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
                                                      'name': request.user.username,
                                                      'title': museo.nombre,
+                                                     'value': 'Añadir',
                                                      'content': info,
                                                      'comentarios': comentarios})))
 

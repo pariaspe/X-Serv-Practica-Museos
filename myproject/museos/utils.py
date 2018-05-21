@@ -2,6 +2,12 @@ from .models import Museo, Usuario, Comentario, MuseoLike
 from django.contrib.auth.models import User
 from django.template.loader import get_template
 from django.template import Context
+from django.db import IntegrityError
+
+from xml.sax import make_parser
+from urllib import request, error
+from xml.sax.handler import ContentHandler
+import museos.parser
 
 
 def print_museos(distrito):
