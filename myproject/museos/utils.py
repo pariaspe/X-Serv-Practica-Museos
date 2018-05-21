@@ -95,7 +95,10 @@ def select_box():
 
 def get_distritos(selected):
     distritos = Museo.objects.all().values_list('distrito', flat=True).distinct()
-    lista = ''
+    if selected == '':
+        lista = '<li id="category-active"><a href="/museos">TODOS</a></li>'
+    else:
+        lista = '<li><a href="/museos">TODOS</a></li>'
     for distrito in distritos:
         if distrito == selected:
             lista += '<li id="category-active"><a href="?distrito=' + distrito + '">' + distrito + '</a></li>'
