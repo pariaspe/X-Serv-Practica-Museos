@@ -27,11 +27,13 @@
         <h1>{{ title | safe }}</h1>
     </div>
 
+    {% if aut %}
     <p><div>
         <form action="" method="POST">
-            <input type="submit" value="Añadir">
+            <input type="submit" value="{{ value }}">
         </form>
     </div></p>
+    {% endif %}
 
     <div id="content">
       {{ content | safe }}

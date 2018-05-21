@@ -100,6 +100,7 @@ def museo_id(request, mid):
         museo = Museo.objects.get(n_id=mid)
         nota = ''
         username = None
+        value = 'Añadir'
 
         if request.method == 'POST' and request.user.is_authenticated():
             username = request.user.username
@@ -107,12 +108,25 @@ def museo_id(request, mid):
             user = User.objects.get(username=username)
             if comentario == None:
                 like = MuseoLike(museo=museo, usuario=user.usuario)
-                like.save()
+                try:
+                    like.save()
+                except IntegrityError:
+                    like = MuseoLike.objects.filter(museo=museo).filter(usuario=user.usuario)
+                    like.delete()
             elif comentario != '':
                 comentario = Comentario(usuario=user.usuario, museo=museo, comentario=comentario)
                 comentario.save()
             else:
                 nota = 'No se pueden enviar comentarios vacios.<br/><br/>'
+
+        if request.user.is_authenticated():
+            username = request.user.username
+            user = User.objects.get(username=username)
+            like = MuseoLike.objects.filter(museo=museo).filter(usuario=user.usuario)
+            if not like:
+                value = 'Añadir'
+            else:
+                value = 'Borrar'
 
         info = print_museo_info(museo)
         comentarios = nota + print_comentarios(museo)
@@ -121,7 +135,7 @@ def museo_id(request, mid):
         return HttpResponse(template.render(Context({'aut': request.user.is_authenticated(),
                                                      'name': request.user.username,
                                                      'title': museo.nombre,
-                                                     'value': 'Añadir',
+                                                     'value': value,
                                                      'content': info,
                                                      'comentarios': comentarios})))
 
